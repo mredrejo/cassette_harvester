@@ -4,7 +4,8 @@ This repo contains the code for the analysis of long reads sequencing of a new b
 Software packages for analysis were installed either from Conda, CRAN or Bioconductor. 
 
 
-Briefly, we used here the *Vibrio cholerae* O1 biovar El Tor str. N16961 genome assembly [GCF_000006745.1](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000006745.1/). The genome was reannotated with [Bakta 1.9.2](https://github.com/oschwengers/bakta) (DB v.5.1) and [IntegronFinder 2.0.5](https://github.com/gem-pasteur/Integron_Finder). Two more attC described in the literature were added manually. The final SI contains 179 cassettes.
+Briefly, we used here the *Vibrio cholerae* O1 biovar El Tor str. N16961 genome assembly [GCF_000006745.1](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000006745.1/). The genome was reannotated with [Bakta 1.9.2](https://github.com/oschwengers/bakta) (DB v.5.1) and [IntegronFinder 2.0.5](https://github.com/gem-pasteur/Integron_Finder). Two more attC described in the literature were added manually. The final SI contains 179 cassettes annotated.
+
 Raw reads were analyzed with [Nanoplot 1.42.0](https://github.com/wdecoster/NanoPlot) and processed with [Porechop 0.2.4](https://github.com/rrwick/Porechop), and [NanoFilt 2.8.0](https://github.com/wdecoster/nanofilt)  (`-q 10`). 
 
 **QC output from final reads is available [here](https://mredrejo.github.io/integron_capturer/results/nanoplot_trimmed/NanoPlot-report.html).**
@@ -14,4 +15,4 @@ Then, reads were mapped against the reference genome using [Minimap 2.28-r1209](
 
 Mapped reads were transformed in *Counts* per feature (CDS, attC or cassette) using the R package `Rsubread v. 2.18.0`. Code is available in the script [superintegron_mapping_GCF_000006745_179curated.R](superintegron_mapping_GCF_000006745_179curated.R). 
 
-**The final [Counts/feature table](results/coverage_N16961_IF2_manual.xlsx) and plots are available in the folder [**results**](results). The folder also contains some interactive plots, like the [counts/cassette](https://mredrejo.github.io/integron_capturer/results/counts_cassettes_fill_evalue.html) (also in Log10 scale [here](https://mredrejo.github.io/integron_capturer/results/counts_cassettes_log10_fill_evalue.html).**
+**The final [Counts/feature table](results/coverage_N16961_IF2_manual.xlsx) and plots are available in the folder [**results**](results). The folder also contains some interactive plots, like the [counts/cassette](https://mredrejo.github.io/integron_capturer/results/counts_cassettes_fill_evalue.html) (also in Log10 scale [here](https://mredrejo.github.io/integron_capturer/results/counts_cassettes_log10_fill_evalue.html)).**
