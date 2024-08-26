@@ -1,0 +1,5 @@
+# integron_finder 2.0.5 
+# cmd: integron_finder --local-max --func-annot --circ --cpu 12 -v --pdf --evalue-attc 4 --outdir . GCF_000006745.1/GCF_000006745.1_ASM674v1_genomic.fna
+ID_replicon	CALIN	complete	In0	topology	size
+NC_002505.1	0	0	0	circ	2961149
+NC_002506.1	0	1	0	circ	1072315
