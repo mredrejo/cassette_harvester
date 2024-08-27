@@ -1,11 +1,13 @@
-#version August 26th, 2024
-#We use nanopore reads (after Porechop & Nanofilt) mapped against the whole N16961 genome
+#version August 27th, 2024
+#Modesto Redrejo Rodríguez
+
+#We use here nanopore reads (after Porechop & Nanofilt) mapped against the whole N16961 genome
 
 
 ########################################################
 #########    STEP 1: load packages         #############
 ########################################################
-paquetes <- c("ggplot2","data.table","gggenes","Rsubread", "dplyr","tidyverse","ggpubr")
+paquetes <- c("ggplot2","data.table","gggenes","Rsubread", "dplyr","tidyverse","ggpubr","BioCircos","circlize")
 unavailable <- setdiff(paquetes, rownames(installed.packages()))
 if ("Rsubread" %in% unavailable) {   BiocManager::install("Rsubread")}
 
@@ -13,8 +15,73 @@ install.packages(unavailable)
 lapply(paquetes, library, character.only = TRUE)
 
 ########################################################
-######   STEP 2: load & prepare annotations   ##########
+############   STEP 2: coverage plots   ################
 ########################################################
+
+#reads coverage per nt circlize
+#load data
+coverage <- fread("../data/cov_mapped_GCF_000006745_reads_chopped_filtered_minimap.tsv.gz",  header=FALSE)
+
+#split per chromosome
+coverage1 <- coverage[coverage$V1=="NC_002505.1",]
+coverage2 <- coverage[coverage$V1=="NC_002506.1",]
+rm(coverage)
+#create a coverage table in 1000 bp windows 
+cov <- data.frame(matrix(NA, nrow = 1, ncol = 4))
+
+for (i in 1:ceiling(nrow(coverage1)/1000)) {
+  cov[i,] <- c("NC_002505.1",(((i-1)*1000)+1),(i*1000),mean(coverage1$V8[(((i-1)*1000)+1):(i*1000)]))
+}
+cov[nrow(cov),3] <- nrow(coverage1)
+cov[nrow(cov),4] <- mean(coverage1$V8[(((i-1)*1000)+1):nrow(coverage1)])
+
+for (i in 1:ceiling(nrow(coverage2)/1000)) {
+  cov[(ceiling(nrow(coverage1)/1000)+i),] <- c("NC_002506.1",(((i-1)*1000)+1),(i*1000),mean(coverage2$V8[(((i-1)*1000)+1):(i*1000)]))
+}
+cov[nrow(cov),3] <- nrow(coverage2)
+cov[nrow(cov),4] <- mean(coverage2$V8[(((i-1)*1000)+1):nrow(coverage2)])
+
+names(cov) <- c("chr","start","end","value1")
+write.table(cov,file="../data/cov.tsv",sep="\t",row.names=FALSE,quote=FALSE)
+
+#circos plot
+circos.clear()
+col_text <- "grey30"
+circos.par("track.height"=0.8, gap.degree=5, cell.padding=c(0, 0, 0, 0))
+circos.initialize(factors=c("NC_002505.1","NC_002506.1"), 
+                  xlim=matrix(c(0, 0, 2961148,1072314), ncol=2))
+
+circos.track(ylim=c(0, 1), panel.fun=function(x, y) {
+  chr=CELL_META$sector.index
+  xlim=CELL_META$xlim
+  ylim=CELL_META$ylim
+  circos.text(mean(xlim), mean(ylim), chr, cex=1, face="bold", col=col_text, 
+              facing="bending.inside", niceFacing=TRUE)
+}, bg.col=c("#FF000040", "#00FF0040"), bg.border=F, track.height=0.1)
+
+brk <- c(0, 0.25,0.31,0.435,0.5, 0.75,1,1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25)*10^6
+circos.track(track.index = get.current.track.index(), panel.fun=function(x, y) {
+  circos.axis(h="top", major.at=brk, labels=round(brk/10^6, 2), labels.cex=0.6, 
+              col=col_text, labels.col=col_text, lwd=2, labels.facing="clockwise")
+}, bg.border=F)
+
+
+#cov track (log10 scale)
+circos.track(factors=cov$chr, x=as.numeric(cov$start), y=log10(as.numeric(cov$value1)+1), panel.fun=function(x, y) {
+  circos.lines(x, y, col="#1F78B4", lwd=2)
+}, ylim=range(log10(as.numeric(cov$value1)+1)), track.height=0.3, bg.border=F)
+
+#cov track (linear scale)
+circos.track(factors=cov$chr, x=as.numeric(cov$start), y=as.numeric(cov$value1), panel.fun=function(x, y) {
+  circos.lines(x, y, col="#1F78B4", lwd=2)
+}, ylim=range(as.numeric(cov$value1)), track.height=0.3, bg.border=F)
+
+
+########################################################
+######   STEP 3: load & prepare annotations   ##########
+########################################################
+
+
 #N16961 GCF_003063785.1.fna annotations from Bakta (keep only cds annotations)
 N16961 <- fread("../bakta_annotations/N16961_GCF_000006745.1/N16961.tsv", skip=5)
 N16961 <- N16961[N16961$Type=="cds", ]
@@ -66,7 +133,7 @@ N16961full <- rbind(N16961[,c(6,1,3,4,5)],N16961_superIn)
 
 
 ########################################################
-######       STEP 3: count mapped reads       ##########
+######       STEP 4: count mapped reads       ##########
 ########################################################
 #minimap -ax map-ont 
 counts <- featureCounts(files=paste0("../data/mapped_GCF_000006745_reads_chopped_filtered_minimap.bam"),annot.ext=na.omit(N16961full),isGTFAnnotationFile=FALSE,isPairedEnd=FALSE,countMultiMappingReads=TRUE, allowMultiOverlap=TRUE,isLongRead=TRUE, fraction = FALSE, ignoreDup = FALSE,reportReads="CORE",nthreads = 12)
@@ -119,7 +186,7 @@ ggplot(data=table_counts_final[table_counts_final$Type=="cassette",], aes(x=log1
 
 
 ########################################################
-######     STEP 4: check multimapped reads    ##########
+######     STEP 5: check multimapped reads    ##########
 ########################################################
 
 #CDS multimapped reads
