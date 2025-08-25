@@ -130,7 +130,7 @@ And use the R script *coveragePlot.R*
 This script will generate a circos coverage plot for each coverage file, plotting the coverage in windows of 1000 nt.
 
 #### **STEP 6: Count mapped reads and final results**
-The script *integronCount.R* is based in **featureCounts** function (package Rsubread). It assigns the mapped reads to the different features of interest (CDS, attC and Cassetes). 
+The script *integronCount.R* is based in **featureCounts** function (package Rsubread 2.20.0). It assigns the mapped reads to the different features of interest (CDS, attC and Cassetes). 
 Multimapping is allowed without fraction scoring, i.e. a read can map in more than one feature and it will score the same in all features.
 The script will generate the following result files:
 
