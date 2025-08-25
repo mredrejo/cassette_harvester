@@ -1,3 +1,0 @@
-Ref_Name	Ref_Len	Mapped_Reads	Breadth	%_Covered	Min_Depth	Max_Depth	Avg_Depth	Std_Dev	Above_0.2_Depth	Above_1_Depth	Above_1.8_Depth	Variation_Coefficient
-NC_002505.1	2961149	136	32042	1.08	0	2	0.02	0.16	1.08	1.08	1.08	10.10
-NC_002506.1	1072315	71997	121365	11.32	0	1909	23.11	109.54	10.39	9.36	7.97	4.74

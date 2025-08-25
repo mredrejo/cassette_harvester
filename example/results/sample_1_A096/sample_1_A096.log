@@ -1,0 +1,98 @@
+
+        ==========     _____ _    _ ____  _____  ______          _____  
+        =====         / ____| |  | |  _ \|  __ \|  ____|   /\   |  __ \ 
+          =====      | (___ | |  | | |_) | |__) | |__     /  \  | |  | |
+            ====      \___ \| |  | |  _ <|  _  /|  __|   / /\ \ | |  | |
+              ====    ____) | |__| | |_) | | \ \| |____ / ____ \| |__| |
+        ==========   |_____/ \____/|____/|_|  \_\______/_/    \_\_____/
+       Rsubread 2.20.0
+
+//========================== featureCounts setting ===========================\\
+||                                                                            ||
+||             Input files : 1 BAM file                                       ||
+||                                                                            ||
+||                           sample_1_A096_mapped.bam                         ||
+||                                                                            ||
+||              Paired-end : no                                               ||
+||        Count read pairs : no                                               ||
+||              Annotation : R data.frame                                     ||
+||      Dir for temp files : .                                                ||
+||      Assignment details : <input_file>.featureCounts                       ||
+||                      (Note that files are saved to the output directory)   ||
+||                                                                            ||
+||                 Threads : 12                                               ||
+||                   Level : meta-feature level                               ||
+||      Multimapping reads : counted                                          ||
+|| Multi-overlapping reads : counted                                          ||
+||   Min overlapping bases : 1                                                ||
+||          Long read mode : yes                                              ||
+||                                                                            ||
+\\============================================================================//
+
+//================================= Running ==================================\\
+||                                                                            ||
+|| Load annotation file .Rsubread_UserProvidedAnnotation_pid383 ...           ||
+||    Features : 3946                                                         ||
+||    Meta-features : 3946                                                    ||
+||    Chromosomes/contigs : 2                                                 ||
+||                                                                            ||
+|| Process BAM file sample_1_A096_mapped.bam...                               ||
+||    Single-end reads are included.                                          ||
+||    Total alignments : 47910                                                ||
+||    Successfully assigned alignments : 41813 (87.3%)                        ||
+||    Running time : 0.00 minutes                                             ||
+||                                                                            ||
+|| Write the final count table.                                               ||
+|| Write the read assignment summary.                                         ||
+||                                                                            ||
+\\============================================================================//
+
+
+        ==========     _____ _    _ ____  _____  ______          _____  
+        =====         / ____| |  | |  _ \|  __ \|  ____|   /\   |  __ \ 
+          =====      | (___ | |  | | |_) | |__) | |__     /  \  | |  | |
+            ====      \___ \| |  | |  _ <|  _  /|  __|   / /\ \ | |  | |
+              ====    ____) | |__| | |_) | | \ \| |____ / ____ \| |__| |
+        ==========   |_____/ \____/|____/|_|  \_\______/_/    \_\_____/
+       Rsubread 2.20.0
+
+//========================== featureCounts setting ===========================\\
+||                                                                            ||
+||             Input files : 1 BAM file                                       ||
+||                                                                            ||
+||                           sample_1_A096_mapped.bam                         ||
+||                                                                            ||
+||              Paired-end : no                                               ||
+||        Count read pairs : no                                               ||
+||              Annotation : R data.frame                                     ||
+||      Dir for temp files : .                                                ||
+||      Assignment details : <input_file>.featureCounts                       ||
+||                      (Note that files are saved to the output directory)   ||
+||                                                                            ||
+||                 Threads : 12                                               ||
+||                   Level : meta-feature level                               ||
+||      Multimapping reads : counted                                          ||
+|| Multi-overlapping reads : counted                                          ||
+||   Min overlapping bases : 1                                                ||
+||          Long read mode : yes                                              ||
+||                                                                            ||
+\\============================================================================//
+
+//================================= Running ==================================\\
+||                                                                            ||
+|| Load annotation file .Rsubread_UserProvidedAnnotation_pid383 ...           ||
+||    Features : 3946                                                         ||
+||    Meta-features : 3946                                                    ||
+||    Chromosomes/contigs : 2                                                 ||
+||                                                                            ||
+|| Process BAM file sample_1_A096_mapped.bam...                               ||
+||    Single-end reads are included.                                          ||
+||    Total alignments : 47910                                                ||
+||    Successfully assigned alignments : 41813 (87.3%)                        ||
+||    Running time : 0.00 minutes                                             ||
+||                                                                            ||
+|| Write the final count table.                                               ||
+|| Write the read assignment summary.                                         ||
+||                                                                            ||
+\\============================================================================//
+
