@@ -145,14 +145,14 @@ The script will generate the following result files:
 
 | File                              | Content                                                                |
 | --------------------------------- | ---------------------------------------------------------------------- |
-| [sample_strain.log](example/results/sample_strain.log)                 | featureCounts log                                                      |
-| [integron_stats_sample_strain.csv](example/results/integron_stats_sample_strain.csv)  | Detail of integron(s) identified                                       |
-| [sample_strain.csv](example/results/sample_strain.csv)                 | Full table with annotation and mapping stats                           |
-| [counts_chromosomes.pdf](example/results/counts_chromosomes.pdf)            | Plot of normalized CPM (counts per million) vs. CDS in each chromosome |
-| [counts_chromosomes_log.pdf](example/results/counts_chromosomes_log.pdf)        | Plot of normalized CPM vs. CDS in each chromosome in log scale         |
-| [counts_cassettes_integron.pdf](example/results/counts_cassettes_integron.pdf)     | Plot of normalized CPM vs. CDS in each integron                        |
-| [counts_cassettes_integron_log.pdf](example/results/counts_cassettes_integron.pdf) | Plot of normalized CPM vs. CDS in each integron in log scale           |
-| [cor_cassette_length_count.pdf](example/results/cor_cassette_length_count.pdf) | Correlation Plot of normalized CPM vs. cassette length           |
+| [sample_strain.log](example/results/sample_1_A096/sample_1_A096.log)                 | featureCounts log                                                      |
+| [integron_stats_sample_strain.csv](example/results/sample_1_A096/integrons_stats_sample_1_A096.csv)  | Detail of integron(s) identified                                       |
+| [sample_strain.csv](example/results/sample_1_A096/sample_1_A096.csv)                 | Full table with annotation and mapping stats                           |
+| [counts_chromosomes.pdf](example/results/sample_1_A096/counts_chromosomes.pdf)            | Plot of normalized CPM (counts per million) vs. CDS in each chromosome |
+| [counts_chromosomes_log.pdf](example/results/sample_1_A096/counts_chromosomes_log.pdf)        | Plot of normalized CPM vs. CDS in each chromosome in log scale         |
+| [counts_cassettes_integron.pdf](example/results/sample_1_A096/counts_cassettes_integron.pdf)     | Plot of normalized CPM vs. CDS in each integron                        |
+| [counts_cassettes_integron_log.pdf](example/results/sample_1_A096/counts_cassettes_integron.pdf) | Plot of normalized CPM vs. CDS in each integron in log scale           |
+| [cor_cassette_length_count.pdf](example/results/sample_1_A096/cor_cassette_length_count.pdf) | Correlation Plot of normalized CPM vs. cassette length           |
 
 ### Contact
 Feel free to contact me (modesto.redrejo@uam.es) for any question or suggestion.
