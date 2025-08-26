@@ -66,6 +66,8 @@ For reference and avoid code errors, the main project directory should contain t
   		├── reads2_strain2 
   		└── ...
 
+> [!IMPORTANT]
+> The workflow will annotate all integrons (both complete and incomplete) across all contigs. However, fragmented chromosome or plasmid contigs will lead to fragmented integrons, so a fully closed genome is highly advisable.
 
 ### Example
 
@@ -76,6 +78,7 @@ We provide examples for one strain, but a loop in a bash script is recommended f
 
 #### **STEP 1: Genome annotation with Bakta.**
 A fresh annotation of your genome is highly recommended to obtain fully comparable results. 
+
 
 ```bash
 conda activate bakta #we advise the use a dedicated environment for bakta
