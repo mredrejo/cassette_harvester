@@ -71,8 +71,12 @@ For reference and avoid code errors, the main project directory should contain t
 
 We provide examples for one strain, but a loop in a bash script is recommended for multiple genome annotations and multiple strains. 
 
+> [!TIP]
+> To avoid errors in downstream processes, we recommend the use of short filenames, without spaces.
+
 #### **STEP 1: Genome annotation with Bakta.**
-A fresh annotation of your genome is highly recommended to obtain fully comparable results.
+A fresh annotation of your genome is highly recommended to obtain fully comparable results. 
+
 ```bash
 conda activate bakta #we advise the use a dedicated environment for bakta
 cd refs
@@ -89,7 +93,8 @@ cd fasta
 conda activate integron_finder2 #we advise the use a dedicated environment for IF2
 integron_finder --local-max --func-annot --circ --cpu 12 -v --pdf  --evalue-attc 4 --calin-threshold 1  --outdir integron_finder_results/ fasta/strain.fna
 ```
-Note that the Evalue for AttC detection is quite permissive to maximize sensitivity but it may need to be adjusted. 
+> [!NOTE]
+> The E-value for AttC detection is quite permissive to maximize sensitivity but it may be adjusted. Alternatively, you can also add a manual integron annotation file in a MS Excel file.
 
 
 #### **STEP 3: Merge annotations.**
@@ -117,7 +122,8 @@ samtools flagstats mapped/sample_strain1_mapped.bam > mapped/sample_strain1_map_
 ```
 
 To obtain interactive and detailed coverage plots, we recommend [BAMDash](https://github.com/jonas-fuchs/BAMdash), which can be also installed with Conda.
-Additionally, to obtain **Circos coverage plot**, we need a simplified bed file containing the key info (number of contigs, names and length) about the genome molecules is needed. It should look:
+
+Additionally, to obtain **Circos coverage plot**, we need a simplified bed file containing the key info (number of contigs, names and length) about the genome molecules is needed. It should look as follows:
 ```
 NC_002505.1	0	2961149
 NC_002506.1	0	1072315
