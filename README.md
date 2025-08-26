@@ -1,13 +1,13 @@
 # Cassette harvester
 
-
-This repo contains the code for analyzing long-read sequencing of a new biotechnological tool for capturing Integron cassettes. This is a collaboration between my lab and the [MBA lab](https://ucm.es/mbalab), which developed the tool. Further details can be found in a new paper that is currently being prepared.
+This repository contains the code for analysing long-read sequencing of a new biotechnological tool for capturing integron cassettes. It is the result of a collaboration between my lab and the [MBA lab](https://ucm.es/mbalab) lab, who developed the tool. Further details can be found in a paper currently in preparation.
+This repo contains the code for analyzing long-read sequencing of a new biotechnological tool for capturing Integron cassettes. This is a collaboration between my lab and the [MBA lab](https://ucm.es/mbalab), 
 
 ### Workflow description
 
-The workflow of the reads processing and mapping is represented below. This is a multi-step workflow that requires execution of each step one-by-one. The info detailed here should be enough for any researcher with some experience in the use of Conda, Linux bash and R and a laptop computer with Linux or MacOS (we did not tested WSL, but is should be fine as well).
+The workflow for processing and mapping the reads is shown below. This multi-step workflow requires the execution of each step sequentially. The information provided here should be sufficient for any researcher with experience of using Conda, Linux Bash and R, and who has access to a laptop computer running Linux or macOS (we have not tested WSL, but it should work as well).
 
-All the software is open source and all packages for the analysis were installed either by Conda, CRAN or Bioconductor. As detailed in the example below, we recommend the use of independent conda environments for some of the packages.
+All the software is open source, and all the analysis packages were installed using Conda, CRAN or Bioconductor. As detailed in the example below, we recommend using independent Conda environments for some of the packages.
 
 ```mermaid
 ---
@@ -16,7 +16,7 @@ config:
   theme: forest
 ---
 flowchart TD
-A[(Reference genome)] ==> B[STEP 1: <br>Gene annotation]
+A[(Reference genome)] ==> B[STEP 1: <br>Genome annotation]
 B -.- B1(Bakta >=1.11)
 A ==> C[STEP 2: <br>Integron annotation]
 C -.- C1(IntegronFinder2 >=2.0.6)
@@ -45,7 +45,7 @@ style E fill:coral
 style I fill:#8BC7F7
 ```
 
-For reference and avoid code errors, the main project directory should contain the R scripts and the directory tree should look as follows:
+To avoid code errors and for reference, the main project directory should contain the R scripts, and the directory tree should look as follows:
 
     └── Integron_harvester_project/
   	 ├── raw/ 
@@ -67,7 +67,7 @@ For reference and avoid code errors, the main project directory should contain t
   		└── ...
 
 > [!IMPORTANT]
-> The workflow will annotate all integrons (both complete and incomplete) across all contigs. However, fragmented chromosome or plasmid contigs will lead to fragmented integrons, so a fully closed genome is highly advisable.
+> The workflow will annotate all integrons (complete and incomplete) across all contigs. However, fragmented chromosome or plasmid contigs will result in fragmented integrons, so it is highly advisable to have a fully closed genome.
 
 ### Example
 
@@ -77,7 +77,7 @@ We provide examples for one strain, but a loop in a bash script is recommended f
 > To avoid errors in downstream processes, we recommend the use of short filenames, without spaces.
 
 #### **STEP 1: Genome annotation with Bakta.**
-A fresh annotation of your genome is highly recommended to obtain fully comparable results. 
+A fresh Bakta annotation of your genome is highly recommended to obtain fully comparable results. All you need is a single fasta format genome file (in the example below `strain1.fna`).
 
 
 ```bash
@@ -101,9 +101,10 @@ integron_finder --local-max --func-annot --circ --cpu 12 -v --pdf  --evalue-att
 
 
 #### **STEP 3: Merge annotations.**
-The script *annotations.R* is developed to combine the bakta annotation table (GFT format) with the IntegronFinder2 table, as well and an (optional) manual cassettes annotation (excel table) form their respective directories. For each strain, the script takes the name of the fasta (v.g. strain.fna) and generates a log file (*strain_combined_annotation.log*) and a final annotations table (*strain_annotations.csv*) in the `results`folder.
-We advise to open it in RStudio and execute the code stepwise to spot possible mistakes.
+The `annotations.R`script is designed to combine the BACTA annotation table (GFT format) with the IntegronFinder2 table, as well as an optional manual cassette annotation (Excel table) from their respective directories. For each strain, the script uses the name of the Fasta file (e.g. strain.fna) to generate a log file (`strain_combined_annotation.log`) and a final annotation table (`strain_annotations.csv`) in the `results` folder.
 
+> [!TIP]
+> We recommend opening R scripts in RStudio and executing the code step by step following the provided comments.
 
 #### **STEP 4: Reads trimming and QC.**
 A *fastq* containing long-reads raw sequences is needed here. 
@@ -116,7 +117,7 @@ NanoPlot -t 12 --color green --verbose --tsv_stats --info_in_report --fastq raw/
 ```
 
 #### **STEP 5: Reads mapping against reference genome.**
-We map now the filtered reads (in this example *sample_chopped_filtered.fastq*) against a reference genome (*strain1.fna*). 
+We map now the filtered reads (in this example `sample_chopped_filtered.fastq`) against a reference genome fasta sequence (`strain1.fna`). 
 ```bash
 conda activate bioconda #if needed
 minimap2 -t 12 -ax map-ont refs/fasta/strain1.fna raw/sample_chopped_filtered.fastq | samtools view -bh > mapped/sample_strain1_mapped.bam
@@ -131,27 +132,27 @@ Additionally, to obtain **Circos coverage plot**, we need a simplified bed file 
 NC_002505.1	0	2961149
 NC_002506.1	0	1072315
 ```
-Then we will use this file to calculate coverage per nucleotide with `bedtools`. Just run:
+Then we will use this file (`strain1.bed) to calculate coverage per nucleotide with `bedtools`. Just run:
 ```bash
 bedtools coverage -a refs/fasta/strain.bed -b mapped/sample_strain1_mapped.bam -bed -d | gzip >  mapped/sample_strain1_cov.tsv.gz
 ```
-And use the R script *coveragePlot.R*
-This script will generate a circos coverage plot for each coverage file, plotting the coverage in windows of 1000 nt.
+Then you can use the R script `coveragePlot.R` to obtain the [circos plot](example/results/circos_sample_1_A096.pdf). This script will generate a circos coverage plot for each coverage file, plotting the coverage in windows of 1000 nt.
 
 #### **STEP 6: Count mapped reads and final results**
-The script *integronCount.R* is based in **featureCounts** function (package Rsubread 2.20.0). It assigns the mapped reads to the different features of interest (CDS, attC and Cassetes). 
-Multimapping is allowed without fraction scoring, i.e. a read can map in more than one feature and it will score the same in all features.
+The `integronCount.R` script is based on the **featureCounts** function (`Rsubread` package, version 2.20.0). It assigns the mapped reads to the different features of interest (CDS, attC and cassettes).
+Multimapping is permitted without fractional scoring; that is to say, a read can map to more than one feature and will be scored the same for each feature.
 The script will generate the following result files:
 
 | File                              | Content                                                                |
 | --------------------------------- | ---------------------------------------------------------------------- |
-| sample_strain.log                 | featureCounts log                                                      |
-| integron_stats_sample_strain.csv  | Detail of integron(s) identified                                       |
-| sample_strain.csv                 | Full table with annotation and mapping stats                           |
-| counts_chromosomes.pdf            | Plot of normalized CPM (counts per million) vs. CDS in each chromosome |
-| counts_chromosomes_log.pdf        | Plot of normalized CPM vs. CDS in each chromosome in log scale         |
-| counts_cassettes_integron.pdf     | Plot of normalized CPM vs. CDS in each integron                        |
-| counts_cassettes_integron_log.pdf | Plot of normalized CPM vs. CDS in each integron in log scale           |
+| [sample_strain.log](example/results/sample_strain.log)                 | featureCounts log                                                      |
+| [integron_stats_sample_strain.csv](example/results/integron_stats_sample_strain.csv)  | Detail of integron(s) identified                                       |
+| [sample_strain.csv](example/results/sample_strain.csv)                 | Full table with annotation and mapping stats                           |
+| [counts_chromosomes.pdf](example/results/counts_chromosomes.pdf)            | Plot of normalized CPM (counts per million) vs. CDS in each chromosome |
+| [counts_chromosomes_log.pdf](example/results/counts_chromosomes_log.pdf)        | Plot of normalized CPM vs. CDS in each chromosome in log scale         |
+| [counts_cassettes_integron.pdf](example/results/counts_cassettes_integron.pdf)     | Plot of normalized CPM vs. CDS in each integron                        |
+| [counts_cassettes_integron_log.pdf](example/results/counts_cassettes_integron.pdf) | Plot of normalized CPM vs. CDS in each integron in log scale           |
+| [cor_cassette_length_count.pdf](example/results/cor_cassette_length_count.pdf) | Correlation Plot of normalized CPM vs. cassette length           |
 
 ### Contact
 Feel free to contact me (modesto.redrejo@uam.es) for any question or suggestion.
