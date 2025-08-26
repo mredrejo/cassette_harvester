@@ -132,7 +132,7 @@ Additionally, to obtain **Circos coverage plot**, we need a simplified bed file 
 NC_002505.1	0	2961149
 NC_002506.1	0	1072315
 ```
-Then we will use this file (`strain1.bed) to calculate coverage per nucleotide with `bedtools`. Just run:
+Then we will use this file (`strain1.bed`) to calculate coverage per nucleotide with `bedtools`. Just run:
 ```bash
 bedtools coverage -a refs/fasta/strain.bed -b mapped/sample_strain1_mapped.bam -bed -d | gzip >  mapped/sample_strain1_cov.tsv.gz
 ```
