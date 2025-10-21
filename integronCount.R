@@ -163,12 +163,13 @@ process_feature_counts <- function(matched_list, bam_dir="mapped", results_dir="
       integron_name <- unique(gsub("attC_[0-9]+_(integron_[0-9]+)_.*", "\\1", attC_positions$Feature_name))
       contig_name <- unique(gsub("attC_[0-9]+_integron_[0-9]+_(.*)", "\\1", attC_positions$Feature_name))
       integron_stats <- data.frame(cbind(integron_name,contig_name))
-      for (j in 1:length(integron_name)){
-        integron_stats$start[j] <- attC_positions$Start[min(grep(integron_name[j],attC_positions$Feature_name))] 
-        integron_stats$end[j] <- attC_positions$Start[max(grep(integron_name[j],attC_positions$Feature_name))] 
+      for (j in 1:nrow(integron_stats)){
+        integron_stats$start[j] <- min(attC_positions$Start[intersect(grep(integron_stats$integron_name[j],attC_positions$Feature_name) , which(attC_positions$Chr==integron_stats$contig_name[j]))])
+        integron_stats$end[j] <- max(attC_positions$End[intersect(grep(integron_stats$integron_name[j],attC_positions$Feature_name) , which(attC_positions$Chr==integron_stats$contig_name[j]))])
         kk <- table_counts[table_counts$Chr==integron_stats$contig_name[j] & table_counts$Type=="cassette" & table_counts$Start >= integron_stats$start[j] & table_counts$End <= integron_stats$end[j], ]
         integron_stats$cassettes[j] <- nrow(kk)
         integron_stats$CPM_mean[j] <- round(mean(kk$CPM),3)
+        integron_stats$Ratio[j] <- round(sum(kk$Counts)*100/(sum(kk$Counts)+sum(table_counts$Chr==integron_stats$contig_name[j] & table_counts$Counts[table_counts$Start < integron_stats$start[j] & table_counts$End < integron_stats$end[j] ])),2)
       }
       
       #write stats_table
@@ -231,7 +232,44 @@ process_feature_counts <- function(matched_list, bam_dir="mapped", results_dir="
         ggsave(paste0(results_dir,"/",matched_list[i],"/", "cor_cassette_length_count.pdf"),
                   width = 5, height = 5)
         
-        #Correlation cassette counts vs previous attC evalue 
+        #CDS multimapped reads
+        multimap <- fread(paste0(matched_list[i],"_mapped.bam.featureCounts"),sep="\t",header=FALSE)
+        
+        #number of cassettes per read
+        multimap <- multimap[multimap$V3>0,]
+        cassettes <- stringr::str_count(multimap$V4, "Cassette")
+        stat_cassette <- as.data.frame(table(cassettes))
+        stat_cassette$perc <- stat_cassette$Freq*100/sum(stat_cassette$Freq)
+        reads_cas <- ggplot(data=stat_cassette)+geom_bar(aes(x=cassettes,y=Freq),stat="identity", col="black",fill="grey60") + 
+          geom_text(aes(x=cassettes,y=Freq, label=paste0(round(perc,2),"%")),vjust = -1, nudge_y  = -.5)+
+          ylim(0,max(stat_cassette$Freq)*1.1)+
+          xlab("Number of cassettes") +ylab("Mapped reads") + theme_bw()+theme(text=element_text(size=12))
+        ggsave(paste0(results_dir,"/",matched_list[i],"/", "reads_per_cassete.pdf"),
+               width = 6, height = 5)
+        #reads_cas <- ggplot(data=stat_cassette)+geom_bar(aes(x=cassettes,y=Freq),stat="identity", col="black",fill="grey60") + 
+        #  geom_text(aes(x=cassettes,y=Freq, label=paste0(round(perc,2),"%")),vjust = -1, nudge_y  = -.5)+
+        #  scale_y_log10() +
+        #  xlab("Number of cassettes") +ylab("Mapped reads") + theme_bw()+theme(text=element_text(size=12))
+        #ggsave(paste0(results_dir,"/",matched_list[i],"/", "reads_per_cassete_log.pdf"),
+        #       width = 6, height = 5)
+        
+        #number of CDS per read
+        genome_tag <- unique(sub("_.*","",sample_annot$GeneID))[which(unique(sub("_.*","",sample_annot$GeneID))!="attC" & unique(sub("_.*","",sample_annot$GeneID))!= "Cassette" & unique(sub("_.*","",sample_annot$GeneID))!= "attI")]
+        CDS <- stringr::str_count(multimap$V4, paste0(genome_tag,"_"))
+        stat_CDS <- as.data.frame(table(CDS))
+        stat_CDS$perc <- stat_CDS$Freq*100/sum(stat_CDS$Freq)
+        reads_CDS <- ggplot(data=stat_CDS)+geom_bar(aes(x=CDS,y=Freq),stat="identity", col="black",fill="grey60") + 
+          geom_text(aes(x=CDS,y=Freq, label=paste0(round(perc,2),"%")),vjust = -1, nudge_y  = -.5)+
+          ylim(0,max(stat_CDS$Freq)*1.1)+
+          xlab("Number of CDS") +ylab("Mapped reads") + theme_bw()+theme(text=element_text(size=12))
+        ggsave(paste0(results_dir,"/",matched_list[i],"/", "reads_per_CDS.pdf"),
+               width = 6, height = 5)
+        #reads_CDS <- ggplot(data=stat_CDS)+geom_bar(aes(x=CDS,y=Freq),stat="identity", col="black",fill="grey60") + 
+        #  geom_text(aes(x=CDS,y=Freq, label=paste0(round(perc,2),"%")),vjust = -1, nudge_y  = -.5)+
+        #  scale_y_log10() +
+        #  xlab("Number of CDS") +ylab("Mapped reads") + theme_bw()+theme(text=element_text(size=12))
+        #ggsave(paste0(results_dir,"/",matched_list[i],"/", "reads_per_CDS_log.pdf"),
+        #       width = 6, height = 5)
         
         (paste("Successfully processed sample: %s", matched_list[i]))
         sink()
