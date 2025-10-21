@@ -152,6 +152,9 @@ The script will generate the following result files:
 | [counts_cassettes_integron.pdf](example/results/sample_1_A096/counts_cassettes_integron.pdf)     | Plot of normalized CPM vs. CDS in each integron                        |
 | [counts_cassettes_integron_log.pdf](example/results/sample_1_A096/counts_cassettes_integron.pdf) | Plot of normalized CPM vs. CDS in each integron in log scale           |
 | [cor_cassette_length_count.pdf](example/results/sample_1_A096/cor_cassette_length_count.pdf) | Correlation Plot of normalized CPM vs. cassette length           |
+| [reads_per_cassete.pdf](example/results/sample_1_A096/reads_per_cassete.pdf) | Number of cassettes mapped per read           |
+| [reads_per_CDS.pdf](example/results/sample_1_A096/reads_per_CDS.pdf) | Number of CDS mapped per read           |
+
 
 ### Contact
 Feel free to contact me (modesto.redrejo@uam.es) for any question or suggestion.
