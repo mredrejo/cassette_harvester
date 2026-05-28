@@ -161,4 +161,7 @@ The script will generate the following result files:
 ### Contact
 Feel free to contact me (modesto.redrejo@uam.es) for any question or suggestion.
 
+### License
+This code is shared with GNU GPLv3 [license](License.md)
+
 
